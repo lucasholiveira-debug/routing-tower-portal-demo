@@ -20,7 +20,6 @@
         <button class="nav-item" data-view="hubs">Meus hubs</button>
         <button class="nav-item" data-view="timeoff">Folgas e férias</button>
         <button class="nav-item" data-view="overtime">Horas extras</button>
-        <button class="nav-item" data-view="tickets" hidden>Tickets</button>
         <button class="nav-item" data-view="links">Links úteis</button>
       </nav>
       <div class="sidebar-footer"><span id="connection-dot"></span><span id="connection-text">Conectando…</span><small id="panel-version" class="panel-version"></small></div>
@@ -82,9 +81,6 @@
         <article class="panel"><div class="panel-head"><div><p class="eyebrow">FIM DE SEMANA E EXCEDENTES</p><h2>Solicitações de hora extra</h2></div><span id="overtime-history-toggle"></span></div><div id="overtime-list" class="table-list"></div></article>
       </section>
 
-      <!-- 09/10/2026: tickets da Frota com este analista (migration 070), montados pelo analista.js (tkaStart). -->
-      <section class="view" id="view-tickets" aria-label="Tickets"></section>
-
       <section class="view" id="view-links">
         <article class="panel"><div class="panel-head"><div><p class="eyebrow">CADASTRADO PELO SUPERVISOR</p><h2>Links úteis</h2></div></div><div id="useful-links-list" class="table-list"></div></article>
       </section>
@@ -115,5 +111,5 @@
   
   
   
-<script src="../assets/panel-demo.js" defer></script></body>
+<script src="../assets/legacy-demo-data.js?v=20261027d"></script><script src="../assets/legacy-analista.js?v=20261027d"></script><script src="../assets/legacy-navigation.js?v=20261027d"></script></body>
 </html>

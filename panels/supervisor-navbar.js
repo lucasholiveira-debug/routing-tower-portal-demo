@@ -1,6 +1,6 @@
 (() => {
   const bar=document.querySelector('.portal-navbar'), toggle=document.querySelector('.portal-menu-toggle');
-  const titles={operationView:'Operação da equipe',dashboardsView:'Dashboard gerencial',visibilidadeView:'Visibilidade Schedule',gerenciamentoView:'Gerenciamento',ticketsView:'Tickets'};
+  const titles={operationView:'Operação da equipe',dashboardsView:'Dashboard gerencial',visibilidadeView:'Visibilidade Schedule',gerenciamentoView:'Gerenciamento'};
   toggle?.addEventListener('click',()=>{const open=bar.classList.toggle('menu-open');toggle.setAttribute('aria-expanded',String(open));});
   const activate=(id)=>{document.querySelector('#portalPageTitle').textContent=titles[id]||'Painel da equipe';document.querySelectorAll('.tab-button[data-view]').forEach(button=>button.setAttribute('aria-current',button.dataset.view===id?'page':'false'));bar.classList.remove('menu-open');toggle?.setAttribute('aria-expanded','false');};
   document.querySelectorAll('.tab-button[data-view]').forEach(button=>button.addEventListener('click',()=>activate(button.dataset.view)));

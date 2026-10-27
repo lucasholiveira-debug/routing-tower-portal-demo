@@ -1,0 +1,44 @@
+/* Offline fixtures for the original renderers. All reads below stay in memory. */
+(() => {
+const role=sessionStorage.getItem('rt-demo-role')||'supervisor';const broad=['coordenador','gerente'].includes(role);const readonly=['coordenador','gerente','analista_senior'].includes(role);
+const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const now=new Date();const monday=new Date(now);monday.setHours(12,0,0,0);monday.setDate(monday.getDate()-((monday.getDay()+6)%7));const dates=Array.from({length:7},(_,i)=>{const d=new Date(monday);d.setDate(d.getDate()+i);return iso(d);});const future=new Date(now);future.setDate(future.getDate()+3);const offDay=iso(future);const then=(day,hour)=>{const d=new Date(day+'T'+hour+':00');if(Number(hour.slice(0,2))<12)d.setDate(d.getDate()+1);return iso(d)+'T'+hour+':00';};
+const names=['Analista Alfa','Analista Beta','Analista Gama','Analista Delta','Analista Épsilon','Folguista Zeta'];
+const analysts=names.map((name,i)=>({id:i+1,name,staff_id:'DEMO-'+(i+1),supervisor:i===3||i===4?'Equipe Sul':'Equipe Norte',shift:'20:00–04:00',shift_start:'20:00',shift_end:'04:00',schedule_pattern:'6x1',is_relief:i===5,portal_token:'demo-analyst-'+(i+1),region_code:'DEMO',items:[],assignments:0,pending:0,execution:0,finished:0,timeoff:[]}));
+let opid=1;const operations=[];const hubs=[];
+for(let i=0;i<8;i++)hubs.push({id:i+1,hub_id:i+1,station_id:'HUB-'+String(i+1).padStart(3,'0'),hub_name:'Operação de demonstração '+(i+1),name:'Operação de demonstração '+(i+1),region_code:'DEMO',subregion:'Base fictícia',cycles:[{id:i+1,cycle_code:i%2?'PM1':'AM',start_time:i%2?'00:00':'21:00',end_time:i%2?'01:00':'22:00'}],notes:'Informações ilustrativas para conferir o layout original.',hub_notes:'Informações ilustrativas para conferir o layout original.'});
+for(const day of dates){for(let ai=0;ai<5;ai++){const count=ai===2||ai===4?1:2;for(let ci=0;ci<count;ci++){const h=hubs[(ai*2+ci)%hubs.length];const start=ci?'00:00':'21:00',end=ci?'01:00':'22:00';const status=ai%3===0?'execution':ai%3===1?'finished':'pending';const item={id:opid,assignment_id:opid++,analyst_id:ai+1,analyst_name:names[ai],portal_token:'demo-analyst-'+(ai+1),hub_id:h.id,station_id:h.station_id,hub_name:h.hub_name,cycle_code:ci?'PM1':'AM',assignment_type:'regular',title:h.station_id,work_date:day,start_datetime:then(day,start),end_datetime:then(day,end),shift_start:'20:00',shift_end:'04:00',operation_status:status,romaneio_url:'',region_code:'DEMO',supervisor:analysts[ai].supervisor};operations.push(item);analysts[ai].items.push(item);}}}
+for(const a of analysts){a.assignments=a.items.length;a.signal=a.id%3===1?'blue':a.id%3===2?'green':'orange';a.status_label=a.signal==='blue'?'em execução':a.signal==='green'?'em ordem':'aguardando início';a.next_hub=a.items[0]?.station_id||'sem hub';}
+const team=analysts.filter(a=>broad||a.supervisor==='Equipe Norte');const teamIds=new Set(team.map(a=>a.id));const teamOps=operations.filter(op=>teamIds.has(op.analyst_id));
+const absence={id:1,analyst_id:1,portal_token:'demo-analyst-1',absence_type:'DSR',start_datetime:offDay+'T20:00:00',end_datetime:then(offDay,'04:00'),approval_status:'approved',status:'pending',analyst_decision:'',reason:'Descanso previsto · registro de demonstração'};analysts[0].timeoff=[absence];
+const extra={id:1,analyst_id:1,analyst_name:names[0],work_date:offDay,start_datetime:offDay+'T20:00:00',end_datetime:then(offDay,'04:00'),minutes:480,status:'awaiting_analyst',reason:'Trabalho no DSR · demonstração',payment_mode:'compensation'};
+const publication={id:1,version:2,published_at:new Date().toISOString(),summary:'Escala de demonstração'};const schedule={id:1,title:'Escala de demonstração',start_date:dates[0],end_date:dates[6],version:2,status:'published'};
+const occurrence={id:1,analyst_id:1,portal_token:'demo-analyst-1',analyst_name:names[0],assignment_id:1,hub_id:1,station_id:'HUB-001',occurrence_type:'Operacional',type:'Operacional',description:'Ocorrência de demonstração para conferir o painel.',message:'Registro fictício de acompanhamento',status:'open',created_at:new Date().toISOString()};
+const payload={schedule,period:{start:dates[0],end:dates[6]},generated_at:new Date().toISOString(),analysts:team,supervisors:broad?['Equipe Norte','Equipe Sul']:['Equipe Norte'],regions:['DEMO'],access:{name:role==='supervisor'?'Supervisor de demonstração':role==='analista_senior'?'Analista sênior de demonstração':'Gestão de demonstração',role,can_edit:!readonly,scope_user_id:1},unassigned_hubs:[{...hubs[7],hub_id:8,cycle_id:8,cycle_code:'PM2',work_date:iso(now),start_time:'02:00',end_time:'03:00',start_datetime:then(iso(now),'02:00'),end_datetime:then(iso(now),'03:00')}],dashboards:[],resources:{hubs}};
+const analyst={analyst:{...analysts[0],name:role==='analista_senior'?'Analista sênior de demonstração':'Analista Alfa'},schedule,period:payload.period,month_period:payload.period,latest_publication:publication,publication_read:true,online_schedule_key:'demo-only',generated_at:new Date().toISOString(),assignments:analysts[0].items,absences:[absence],overtime:[extra],notifications:[{id:'demo-notice',title:'Bem-vindo ao seu ambiente',subject:'Orientações da operação',message:'Esta é uma demonstração com dados fictícios, sem conexão com o banco.',created_at:new Date().toISOString(),status:'unread'}],all_hubs:hubs,occurrences:[],occurrence_types:[{code:'operational',label:'Operacional'}],resources:{}};
+const mgmt={me:{key:'demo-'+role,name:payload.access.name,role,side:broad?'gestao':'time'},people:[],teams:[{key:'norte',name:'Equipe Norte'},{key:'sul',name:'Equipe Sul'}],requests:[],notices:[],workspaces:[],files:[],settings:{}};
+const picked=Math.min(5,Math.max(1,Number(new URLSearchParams(location.search).get('demo_analyst')||1)))-1;
+analyst.analyst={...analysts[picked],name:role==='analista_senior'?'Analista sênior de demonstração':analysts[picked].name};analyst.assignments=analysts[picked].items;
+window.PREVIEW_DATA=teamOps.filter(op=>op.work_date===dates[0]).map(op=>[op.supervisor,'20:00','04:00',op.analyst_name,'DEMO',op.station_id,op.hub_name,op.cycle_code,'SSSSSSS',op.start_datetime.slice(11,16)+'–'+op.end_datetime.slice(11,16),op.start_datetime.slice(11,16),op.end_datetime.slice(11,16)].join('|')).join('\n');
+window.PREVIEW_TEAM=team.map(a=>[a.supervisor,'20:00','04:00',a.name,'Routing Tower','Ativo','','','DEMO'].join('|')).join('\n');
+const rootUrl=new URL('../index.html',location.href).href;const useful=[{id:1,title:'Guia de demonstração',category:'Orientações',url:rootUrl,sort_order:1}];
+window.RT_WEB_CONTEXT={cache_key:'offline-demo-'+role+'-v3'};window.RT_PANEL_CONFIG={supabaseUrl:location.origin+'/offline-demo',anonKey:'demo-no-api-key',supervisorToken:'offline-demo-'+role+'-v3',localPortalBaseUrl:location.origin};window.RT_DEMO_DATA={payload,operations:teamOps,analyst,role,readonly};
+const response=(value,status=200)=>new Response(JSON.stringify(value),{status,headers:{'Content-Type':'application/json'}});
+window.fetch=async function(input,options={}){const url=new URL(typeof input==='string'?input:input.url,location.href),path=url.pathname;const rpc=path.split('/').pop();let body={};try{body=JSON.parse(options.body||'{}');}catch{}
+ if(rpc==='rt_get_supervisor_state')return response({payload,operations:teamOps,occurrences:[occurrence],occurrences_resolved:[],overtime:[extra]});
+ if(rpc==='rt_get_analyst_snapshot')return response(analyst);
+ if(rpc==='rt_supervisor_live_timeoff')return response({absences:[absence],first_day:dates[0],last_day:dates[6]});
+ if(rpc==='rt_get_analyst_revision'||rpc==='rt_get_supervisor_revision')return response({revision:'demo-v3'});
+ if(rpc==='rt_mgmt_load')return response(mgmt);
+ if(rpc==='rt_mgmt_pending')return response({count:0});
+ if(rpc==='rt_visibility_events')return response([]);
+ if(rpc==='rt_visibility_schedule')return response({analysts:team,operations:teamOps,assignments:teamOps,period:payload.period});
+ if(/useful_links|list_useful_links/.test(rpc))return response(useful);
+ if(/get_agenda|list_agenda|list_supervisor_substitutes/.test(rpc))return response([]);
+ if(rpc.startsWith('rt_occurrence_types'))return response(analyst.occurrence_types);
+ if(rpc==='rt_register_panel_version')return response({ok:true});
+ if(path.includes('manutencao.json'))return response({ativo:false});
+ if(/docs\.google|script\.google|disabled-script/.test(url.href))return response({rows:[],updated_at:new Date().toISOString()});
+ return response({message:'Ambiente de demonstração: esta ação não grava dados. A conexão será disponibilizada na próxima etapa.'},403);
+};
+})();

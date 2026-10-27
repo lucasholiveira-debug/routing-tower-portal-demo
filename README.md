@@ -22,3 +22,11 @@ GitHub Pages, branch `main`, pasta raiz. Os caminhos relativos permitem hospedar
 ## Próxima fase
 
 Conectar o backend com Supabase Auth, permissões e RLS validadas no servidor; integrar publicações, execução, DSR e transferências. Nenhum dado real, credencial, chave de API ou banco foi incluído.
+
+## Organização do painel
+
+A entrada é uma tela de boas-vindas comum a todos. Supervisor, coordenador e gerente usam menu lateral. Agenda, Links úteis e O que significa ficam em Comunicação. O topo reúne Ocorrências, Prévia da escala, Hubs sem analista e Atualizar.
+
+## Layout original preservado
+
+Os cards, os indicadores e os módulos internos usam os renderizadores originais dos HTMLs. As leituras da demonstração são respondidas em memória por `legacy-demo-data.js`; operações de gravação não são executadas. Constantes de conexão e referências de planilhas reais foram removidas. Tickets foi removido dos dois painéis, incluindo navegação, ajuda e código do módulo. A lateral é uma camada de navegação separada dos renderizadores.

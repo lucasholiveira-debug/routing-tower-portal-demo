@@ -7,41 +7,17 @@
   <title>Painel do supervisor | Routing Tower</title>
   <link rel="stylesheet" href="./supervisor.css">
   <link rel="stylesheet" href="./supervisor-navbar.css">
-<link rel="stylesheet" href="../assets/demo.css"></head>
+<link rel="stylesheet" href="../assets/demo.css"><link rel="stylesheet" href="../assets/team-layout.css?v=20261027d"></head>
 <body>
-  <header class="portal-navbar" aria-label="Navegação do supervisor">
-    <a class="portal-brand" href="#operationView" aria-label="Routing Tower, operação"><span class="portal-brand-mark">RT</span><span><strong>Routing Tower</strong><small>Painel da equipe</small></span></a>
-    <button class="portal-menu-toggle" type="button" aria-controls="supervisorNavigation" aria-expanded="false" aria-label="Abrir navegação">☰</button>
-    <div class="portal-navigation" id="supervisorNavigation">    <nav class="view-tabs" aria-label="Áreas do painel">
-      <button type="button" class="tab-button active" data-view="operationView">Operação</button>
-      <button type="button" class="tab-button" data-view="dashboardsView">Dashboard Gerencial</button>
-      <button type="button" class="tab-button" data-view="visibilidadeView">Visibilidade Schedule</button>
-      <button type="button" class="tab-button" data-view="gerenciamentoView">Gerenciamento</button>
-      <button type="button" class="tab-button" data-view="ticketsView" hidden>Tickets</button>
-    </nav></div>
-    <div class="portal-utilities">        <button type="button" class="theme-toggle" id="themeBtn" aria-label="Ativar tema escuro" title="Alternar dia e noite"><span class="theme-orbit"><span class="theme-sun"></span><span class="theme-moon"></span></span></button>        <button type="button" class="ghost help-head" id="helpBtn" title="Como usar este painel e o que significa cada termo" aria-label="Como usar este painel">?</button></div>
-  </header>
+<aside class="portal-navbar portal-sidebar" aria-label="Navegação do painel"><a class="portal-brand" href="#operationView" aria-label="Routing Tower, operação"><span class="portal-brand-mark">RT</span><span><strong>Routing Tower</strong><small>Meu ambiente</small></span></a><span class="sidebar-section-label">ÁREAS DO PAINEL</span><div class="portal-navigation" id="supervisorNavigation"><nav class="view-tabs" aria-label="Áreas do painel"><button type="button" class="tab-button active" data-view="operationView" aria-current="page"><span class="nav-symbol" aria-hidden="true">◫</span><span class="nav-label">Operação</span></button><button type="button" class="tab-button" data-view="dashboardsView"><span class="nav-symbol" aria-hidden="true">▥</span><span class="nav-label">Dashboard gerencial</span></button><button type="button" class="tab-button" data-view="visibilidadeView"><span class="nav-symbol" aria-hidden="true">▦</span><span class="nav-label">Visibilidade da escala</span></button><button type="button" class="tab-button" data-view="gerenciamentoView"><span class="nav-symbol" aria-hidden="true">⚙</span><span class="nav-label">Gerenciamento</span></button><button type="button" class="tab-button" data-view="communicationView"><span class="nav-symbol" aria-hidden="true">☷</span><span class="nav-label">Comunicação</span></button></nav></div><div class="sidebar-footer"><span>Demonstração · dados fictícios</span><button type="button" class="theme-toggle" id="themeBtn" aria-label="Alternar tema claro e escuro" title="Alternar tema"><span class="theme-orbit"><span class="theme-sun"></span><span class="theme-moon"></span></span></button></div></aside><button class="sidebar-overlay" id="sidebarOverlay" aria-label="Fechar navegação" hidden></button>
   <header class="hero portal-page-heading">
+    <button class="portal-menu-toggle" type="button" aria-controls="supervisorNavigation" aria-expanded="false" aria-label="Abrir navegação">☰ <span>Menu</span></button>
     <div class="portal-page-title"><div><p class="portal-eyebrow">ACOMPANHAMENTO OPERACIONAL</p><h1 id="portalPageTitle">Operação da equipe</h1><p class="sub">Escala publicada, ocorrências e execução em um só lugar.</p></div></div>
     <div class="actions portal-actionbar">
-
-
-        <button type="button" class="ghost" id="eventsBtn" title="Criar agenda: reuniões, treinamentos e implantações">Agenda</button>
         <button type="button" class="ghost" id="occurrencesBtn" title="Ocorrências abertas">Ocorrências (<span id="occurrencesBadge">0</span>)</button>
         <button type="button" class="ghost" id="previewBtn" title="Gantt da escala publicada">Prévia da escala</button>
         <button type="button" class="ghost" id="unassignedBtn" title="Hubs sem analista na data operacional">Hubs sem analista (<span id="unassignedBadge">0</span>)</button>
-        <div class="more-menu">
-          <button type="button" class="ghost" id="moreBtn" aria-haspopup="true" aria-expanded="false">Mais ▾</button>
-          <div class="more-panel" id="morePanel" hidden>
-            <button type="button" id="substitutesBtn">Supervisor substituto</button>
-            <button type="button" id="emergencyBtn">Cadastro emergencial (só hoje)</button>
-            <button type="button" id="linksBtn">Links úteis</button>
-            <button type="button" id="glossaryBtn">O que significa cada termo</button>
-            <button type="button" id="updatePortalBtn">Atualizar telas</button>
-          </div>
-        </div>
         <button type="button" class="primary" id="refreshBtn" title="Atualizar painel">Atualizar</button></div>
-    <div class="welcome-card"><strong id="welcomeTitle">Olá!</strong><span id="welcomeText">Estou preparando o panorama da sua operação.</span></div>
   </header>
   <main>
     <div class="error" id="error"></div>
@@ -88,12 +64,11 @@
       <div class="dashboard-grid" id="dashboardLinks"></div>
       <div class="dashboard-frame-wrap" id="dashboardFrameWrap" hidden><div class="frame-toolbar"><strong id="dashboardFrameTitle"></strong><a class="link-button" id="dashboardExternal" target="_blank" rel="noopener">Abrir em nova aba</a></div><iframe id="dashboardFrame" title="Dashboard gerencial"></iframe></div>
     </section>
+<section class="portal-view" id="communicationView" aria-label="Comunicação"><div class="communication-heading"><p>Agenda, materiais de apoio e orientações em um só lugar.</p></div><div class="communication-grid"><article class="communication-card"><span class="communication-icon" aria-hidden="true">▦</span><h3>Agenda</h3><p>Consulte reuniões, treinamentos e compromissos da equipe.</p><button type="button" id="eventsBtn">Abrir agenda <span aria-hidden="true">↗</span></button></article><article class="communication-card"><span class="communication-icon" aria-hidden="true">↗</span><h3>Links úteis</h3><p>Encontre materiais e contatos de apoio da operação.</p><button type="button" id="linksBtn">Consultar links <span aria-hidden="true">↗</span></button></article><article class="communication-card"><span class="communication-icon" aria-hidden="true">?</span><h3>O que significa</h3><p>Entenda os termos e saiba como usar as informações do painel.</p><button type="button" id="glossaryBtn">Ver orientações <span aria-hidden="true">↗</span></button></article></div></section>
     <!-- 08/10/2026: projeto Visibilidade Schedule (planilha Gestão T3), montado pelo supervisor.js numa caixa isolada. -->
     <section class="portal-view" id="visibilidadeView" aria-label="Visibilidade Schedule"></section>
     <!-- 08/10/2026: Gerenciamento (ESBOÇO), montado pelo supervisor.js (mgmtStart). -->
     <section class="portal-view" id="gerenciamentoView" aria-label="Gerenciamento"></section>
-    <!-- 09/10/2026: Tickets da Frota (migration 070), montado pelo supervisor.js (tkStart). A aba só aparece com a 070 no Supabase. -->
-    <section class="portal-view" id="ticketsView" aria-label="Tickets"></section>
   </main>
   <dialog id="details"><div class="modal" id="detailsBody"></div></dialog>
   <dialog id="unassigned"><div class="modal" id="unassignedBody"></div></dialog>
@@ -104,14 +79,5 @@
   <dialog id="linksDialog"><div class="modal" id="linksBody"></div></dialog>
   <dialog id="glossaryDialog"><div class="modal" id="glossaryBody"></div></dialog>
   <dialog id="ganttDialog" class="gantt-screen"><div class="modal" id="ganttBody"></div></dialog>
-  <div class="fab-menu" id="fabMenu">
-    <button type="button" class="fab-action" id="fabPdf">Exportar esta visão em PDF</button>
-    <button type="button" class="fab-action" id="fabToday">Voltar para hoje</button>
-    <button type="button" class="fab-action" id="fabRefresh">Atualizar dados</button>
-  </div>
-  <button type="button" class="fab" id="fab" aria-label="Ações rápidas" title="Ações rápidas"><span class="fab-mark"></span></button>
-  
-  
-
-<script src="../assets/panel-demo.js" defer></script></body>
+<div hidden aria-hidden="true"><button type="button" id="helpBtn"></button><button type="button" id="updatePortalBtn"></button><button type="button" id="substitutesBtn"></button><button type="button" id="emergencyBtn"></button><button type="button" id="moreBtn"></button><button type="button" id="fab"></button><button type="button" id="fabPdf"></button><button type="button" id="fabToday"></button><button type="button" id="fabRefresh"></button><div id="morePanel" hidden></div><div id="fabMenu" hidden></div></div><script src="../assets/legacy-demo-data.js?v=20261027d"></script><script src="../assets/legacy-supervisor.js?v=20261027d"></script><script src="../assets/legacy-navigation.js?v=20261027d"></script></body>
 </html>
