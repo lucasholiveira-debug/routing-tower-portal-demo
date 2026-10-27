@@ -5,7 +5,7 @@ if(!document.querySelector('.portal-sidebar')){
  const connection=document.getElementById('connection-text');if(connection){const restore=()=>{connection.textContent='Demonstração · dados fictícios';};new MutationObserver(()=>{if(connection.textContent!=='Demonstração · dados fictícios')restore();}).observe(connection,{childList:true,subtree:true});restore();}
  return;
 }
-openAnalystPortal=function(token){const id=Number(String(token).split('-').pop())||1;window.open(new URL('./analista.html?demo_analyst='+id,location.href).href,'_blank','noopener');};
+openAnalystPortal=function(token){const id=Number(String(token).split('-').pop())||1;window.open(new URL('./analista.html?v=20261027d&demo_analyst='+id,location.href).href,'_blank','noopener');};
 
 if(window.RT_DEMO_DATA.readonly){const guard=()=>document.querySelectorAll('#gerenciamentoView [data-mg]').forEach(button=>{if(/^(new-|config$|settings$|reply$|save|delete|remove|archive|apply)/.test(button.dataset.mg)){button.disabled=true;button.title='Perfil de consulta';}});new MutationObserver(guard).observe(document.querySelector('#gerenciamentoView'),{childList:true,subtree:true});guard();}
 const sidebar=document.querySelector('.portal-sidebar'),toggle=document.querySelector('.portal-menu-toggle'),overlay=document.querySelector('#sidebarOverlay'),narrow=matchMedia('(max-width:760px)');
