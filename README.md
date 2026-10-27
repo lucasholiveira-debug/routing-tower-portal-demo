@@ -4,7 +4,9 @@ Teste público de navegação, com dados fictícios, separado do aplicativo prin
 
 ## Como explorar
 
-Abra a página inicial, clique em **Entrar no ambiente** e escolha um perfil. Não existe autenticação real nesta demonstração.
+Abra a página inicial, use o cartão de acesso na própria página, selecione **Explorar demonstração** e escolha um perfil. O logo utiliza camadas em 3D, iluminação e animações suaves, com suporte à preferência de movimento reduzido.
+
+A aba **Login** apresenta a interface de acesso futuro; seus campos ficam desativados até a integração do backend. Não existe autenticação real nesta demonstração.
 
 - Supervisor: operação, dashboard, visibilidade, gerenciamento e janelas de ações.
 - Analista: escala individual, hubs, folgas, horas extras e links.
