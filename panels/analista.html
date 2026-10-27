@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta name="routing-tower-build" content="1.8.4">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>Minha Escala | Routing Tower</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./portal_forms.css">
+  <link rel="stylesheet" href="./smart_motion.css">
+<link rel="stylesheet" href="../assets/demo.css"></head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">RT</span><div><strong>Routing Tower</strong><small>Portal do analista</small></div></div>
+      <nav>
+        <button class="nav-item active" data-view="home">Visão geral</button>
+        <button class="nav-item" data-view="week">Minha semana</button>
+        <button class="nav-item" data-view="hubs">Meus hubs</button>
+        <button class="nav-item" data-view="timeoff">Folgas e férias</button>
+        <button class="nav-item" data-view="overtime">Horas extras</button>
+        <button class="nav-item" data-view="tickets" hidden>Tickets</button>
+        <button class="nav-item" data-view="links">Links úteis</button>
+      </nav>
+      <div class="sidebar-footer"><span id="connection-dot"></span><span id="connection-text">Conectando…</span><small id="panel-version" class="panel-version"></small></div>
+    </aside>
+
+    <main>
+      <!-- 04/10/2026: mesmo visual do painel do supervisor (céu/cidade animados e tema claro/escuro). -->
+      <header class="topbar">
+        <div class="city-scene" aria-hidden="true"><div class="stars"></div><div class="sky-orb"></div><div class="city"></div></div>
+        <div class="topbar-title"><p class="eyebrow">ESCALA INDIVIDUAL</p><h1 id="analyst-name">Carregando…</h1></div>
+        <div class="topbar-actions">
+          <button type="button" class="theme-toggle" id="theme-btn" aria-label="Ativar tema escuro" title="Alternar dia e noite"><span class="theme-orbit"><span class="theme-sun"></span><span class="theme-moon"></span></span></button>
+          <button type="button" id="glossary-btn" class="glossary-btn" title="Como usar esta tela e o que significa cada termo" aria-label="Como usar esta tela e o que significa cada termo">?</button>
+          <div id="schedule-type-tabs" class="schedule-type-tabs" hidden>
+            <button type="button" class="schedule-type-tab active" data-schedule-type="fixed">Escala semanal</button>
+            <button type="button" class="schedule-type-tab" data-schedule-type="weekend">Fim de semana</button>
+          </div>
+          <span class="version" id="version-badge">Sem publicação</span><button id="update-portal-btn" title="Baixar a versão mais recente das telas">Atualizar telas</button><button id="export-update-btn">Exportar atualização</button><button id="refresh-btn">Atualizar</button>
+        </div>
+      </header>
+
+      <section id="alert-area"></section>
+
+      <section class="view active" id="view-home">
+        <article class="portal-hero">
+          <div>
+            <p class="eyebrow">ROTINA OPERACIONAL</p>
+            <h2>Seu painel da semana</h2>
+            <p id="smart-message">Estou organizando sua rotina e destacando o que precisa de atenção.</p>
+          </div>
+          <div class="hero-pill"><span id="hero-period">Semana atual</span></div>
+        </article>
+        <section class="action-card" id="action-card" hidden></section>
+        <div class="metric-grid">
+          <article class="metric"><span>Jornada</span><strong id="shift-value">—</strong><small id="schedule-pattern">—</small></article>
+          <article class="metric"><span>Atividades na semana</span><strong id="assignment-count">0</strong><small>Hubs e coberturas</small></article>
+          <article class="metric"><span>Próxima folga</span><strong id="next-timeoff">—</strong><small id="next-timeoff-type">Sem evento</small></article>
+          <article class="metric"><span>Pendências</span><strong id="pending-count">0</strong><small>Confirmações e avisos</small></article>
+        </div>
+        <div class="content-grid">
+          <article class="panel span-2"><div class="panel-head"><div><p class="eyebrow">PRÓXIMAS ATIVIDADES</p><h2>Minha operação</h2></div></div><div id="upcoming-list" class="timeline-list"></div></article>
+          <article class="panel"><div class="panel-head"><div><p class="eyebrow">COMUNICAÇÃO</p><h2>Avisos recentes</h2></div></div><div id="notification-list" class="notification-list"></div></article>
+        </div>
+      </section>
+
+      <section class="view" id="view-week">
+        <article class="panel"><div class="panel-head"><div><p class="eyebrow">PLANEJAMENTO PUBLICADO</p><h2>Minha semana</h2></div><div class="week-head-actions"><div id="week-switch" class="week-switch" hidden><button type="button" class="week-switch-btn active" data-week-offset="0">Semana atual</button><button type="button" class="week-switch-btn" data-week-offset="1">Próxima semana</button></div><span id="period-label"></span></div></div><div id="week-grid" class="week-grid"></div></article>
+      </section>
+
+      <section class="view" id="view-hubs">
+        <article class="panel"><div class="panel-head"><div><p class="eyebrow">BASE OPERACIONAL</p><h2>Hubs e particularidades</h2></div></div><div id="hub-grid" class="hub-grid"></div></article>
+      </section>
+
+      <section class="view" id="view-timeoff">
+        <article class="panel"><div class="panel-head"><div><p class="eyebrow">AUSÊNCIAS PROGRAMADAS</p><h2>Folgas, DSR, compensatórias e férias</h2></div><span id="timeoff-period"></span></div><div id="timeoff-list" class="table-list"></div></article>
+      </section>
+
+      <section class="view" id="view-overtime">
+        <article class="panel"><div class="panel-head"><div><p class="eyebrow">FIM DE SEMANA E EXCEDENTES</p><h2>Solicitações de hora extra</h2></div><span id="overtime-history-toggle"></span></div><div id="overtime-list" class="table-list"></div></article>
+      </section>
+
+      <!-- 09/10/2026: tickets da Frota com este analista (migration 070), montados pelo analista.js (tkaStart). -->
+      <section class="view" id="view-tickets" aria-label="Tickets"></section>
+
+      <section class="view" id="view-links">
+        <article class="panel"><div class="panel-head"><div><p class="eyebrow">CADASTRADO PELO SUPERVISOR</p><h2>Links úteis</h2></div></div><div id="useful-links-list" class="table-list"></div></article>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="hub-dialog" class="hub-detail-dialog">
+    <form method="dialog" class="hub-dialog-shell">
+      <div class="hub-dialog-toolbar">
+        <div><span>Routing Tower</span><strong id="hub-dialog-title">Detalhes da operação</strong></div>
+        <button type="button" class="dialog-help" id="hub-dialog-help" aria-label="Como usar esta janela" title="Como usar esta janela">?</button>
+        <button class="dialog-close" aria-label="Fechar detalhes" title="Fechar">×</button>
+      </div>
+      <div id="hub-dialog-content" class="hub-dialog-scroll"></div>
+    </form>
+  </dialog>
+  <!-- 04/10/2026: "Como usar esta tela" (o "?" do topo e o "?" da janela da operação). -->
+  <dialog id="help-dialog" class="hub-detail-dialog">
+    <form method="dialog" class="hub-dialog-shell">
+      <div class="hub-dialog-toolbar">
+        <div><span>Routing Tower</span><strong id="help-dialog-title">Como usar</strong></div>
+        <button class="dialog-close" aria-label="Fechar ajuda" title="Fechar">×</button>
+      </div>
+      <div id="help-dialog-content" class="hub-dialog-scroll"></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast"></div>
+  
+  
+  
+<script src="../assets/panel-demo.js" defer></script></body>
+</html>

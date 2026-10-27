@@ -1,0 +1,45 @@
+@view-transition { navigation: none; }
+::view-transition-old(root) { animation: smart-out .18s ease both; }
+::view-transition-new(root) { animation: smart-in .28s cubic-bezier(.22,1,.36,1) both; }
+@keyframes smart-out { to { opacity: 0; transform: scale(.992); } }
+@keyframes smart-in { from { opacity: 0; transform: translateY(7px) scale(.995); } }
+
+.smart-scope {
+  display: flex; gap: 6px; width: fit-content; max-width: 100%; padding: 5px;
+  margin: 14px 0; border: 1px solid var(--line); border-radius: 15px;
+  background: color-mix(in srgb, var(--card, #fff) 88%, transparent);
+  box-shadow: 0 8px 24px #0f172a0d;
+}
+.smart-scope button {
+  border: 0; border-radius: 11px; padding: 9px 13px; background: transparent;
+  color: var(--muted); font-weight: 850; transition: transform .18s, color .2s, background .2s, box-shadow .2s;
+}
+.smart-scope button:hover { transform: translateY(-1px); color: var(--ink); }
+.smart-scope button.active {
+  color: #fff; background: linear-gradient(135deg, #2563eb, #7c3aed);
+  box-shadow: 0 8px 20px #4f46e533;
+}
+.smart-hint {
+  margin: 8px 0 16px; padding: 11px 13px; border: 1px solid #bfdbfe;
+  border-radius: 13px; background: #eff6ff; color: #1e3a8a; font-size: 12px;
+}
+[data-theme=dark] .smart-hint { border-color: #334e7d; background: #172442; color: #bfdbfe; }
+.candidate-loading { opacity: .65; background-image: linear-gradient(100deg, transparent 30%, #ffffff55 50%, transparent 70%); background-size: 220% 100%; animation: shimmer 1.1s linear infinite; }
+@keyframes shimmer { to { background-position: -220% 0; } }
+
+@supports (animation-timeline: view()) {
+  .card, .assignment-card, .timeline-item, .operation {
+    animation: smart-reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0 entry 22%;
+  }
+  @keyframes smart-reveal { from { opacity: .35; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: none; } }
+}
+/* 04/10/2026: troca de tema no ritmo do painel do supervisor (cores em 0,7 s). */
+body, .metric, .panel, .portal-hero, .timeline-item, .notification, .row-card, .hub-card, .assignment-card,
+.day-column, .empty, .decision-box, .op-status, .agenda-day-card, .version, .schedule-type-tabs, .week-switch,
+.hub-search, .history-toggle-btn {
+  transition: transform .2s ease, box-shadow .2s ease, background-color .7s ease, border-color .7s ease, color .7s ease;
+}
+@media (max-width: 620px) { .smart-scope { width: 100%; } .smart-scope button { flex: 1; padding-inline: 8px; } }
+

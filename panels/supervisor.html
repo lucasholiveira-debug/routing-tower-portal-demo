@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta name="routing-tower-build" content="1.8.4">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Painel do supervisor | Routing Tower</title>
+  <link rel="stylesheet" href="./supervisor.css">
+  <link rel="stylesheet" href="./supervisor-navbar.css">
+<link rel="stylesheet" href="../assets/demo.css"></head>
+<body>
+  <header class="portal-navbar" aria-label="Navegação do supervisor">
+    <a class="portal-brand" href="#operationView" aria-label="Routing Tower, operação"><span class="portal-brand-mark">RT</span><span><strong>Routing Tower</strong><small>Painel da equipe</small></span></a>
+    <button class="portal-menu-toggle" type="button" aria-controls="supervisorNavigation" aria-expanded="false" aria-label="Abrir navegação">☰</button>
+    <div class="portal-navigation" id="supervisorNavigation">    <nav class="view-tabs" aria-label="Áreas do painel">
+      <button type="button" class="tab-button active" data-view="operationView">Operação</button>
+      <button type="button" class="tab-button" data-view="dashboardsView">Dashboard Gerencial</button>
+      <button type="button" class="tab-button" data-view="visibilidadeView">Visibilidade Schedule</button>
+      <button type="button" class="tab-button" data-view="gerenciamentoView">Gerenciamento</button>
+      <button type="button" class="tab-button" data-view="ticketsView" hidden>Tickets</button>
+    </nav></div>
+    <div class="portal-utilities">        <button type="button" class="theme-toggle" id="themeBtn" aria-label="Ativar tema escuro" title="Alternar dia e noite"><span class="theme-orbit"><span class="theme-sun"></span><span class="theme-moon"></span></span></button>        <button type="button" class="ghost help-head" id="helpBtn" title="Como usar este painel e o que significa cada termo" aria-label="Como usar este painel">?</button></div>
+  </header>
+  <header class="hero portal-page-heading">
+    <div class="portal-page-title"><div><p class="portal-eyebrow">ACOMPANHAMENTO OPERACIONAL</p><h1 id="portalPageTitle">Operação da equipe</h1><p class="sub">Escala publicada, ocorrências e execução em um só lugar.</p></div></div>
+    <div class="actions portal-actionbar">
+
+
+        <button type="button" class="ghost" id="eventsBtn" title="Criar agenda: reuniões, treinamentos e implantações">Agenda</button>
+        <button type="button" class="ghost" id="occurrencesBtn" title="Ocorrências abertas">Ocorrências (<span id="occurrencesBadge">0</span>)</button>
+        <button type="button" class="ghost" id="previewBtn" title="Gantt da escala publicada">Prévia da escala</button>
+        <button type="button" class="ghost" id="unassignedBtn" title="Hubs sem analista na data operacional">Hubs sem analista (<span id="unassignedBadge">0</span>)</button>
+        <div class="more-menu">
+          <button type="button" class="ghost" id="moreBtn" aria-haspopup="true" aria-expanded="false">Mais ▾</button>
+          <div class="more-panel" id="morePanel" hidden>
+            <button type="button" id="substitutesBtn">Supervisor substituto</button>
+            <button type="button" id="emergencyBtn">Cadastro emergencial (só hoje)</button>
+            <button type="button" id="linksBtn">Links úteis</button>
+            <button type="button" id="glossaryBtn">O que significa cada termo</button>
+            <button type="button" id="updatePortalBtn">Atualizar telas</button>
+          </div>
+        </div>
+        <button type="button" class="primary" id="refreshBtn" title="Atualizar painel">Atualizar</button></div>
+    <div class="welcome-card"><strong id="welcomeTitle">Olá!</strong><span id="welcomeText">Estou preparando o panorama da sua operação.</span></div>
+  </header>
+  <main>
+    <div class="error" id="error"></div>
+
+    <section class="portal-view active" id="operationView">
+      <section class="filters-card">
+        <div id="scopeLabel" class="scope-chip">Escopo autorizado</div>
+        <div class="filters-bar" id="filtersBar"></div>
+      </section>
+      <section class="date-modes" aria-label="Período do painel">
+        <button type="button" class="date-mode active" data-period-mode="day">Dia</button>
+        <button type="button" class="date-mode" data-period-mode="week">Semana</button>
+        <button type="button" class="date-mode" data-period-mode="month">Mês</button>
+        <button type="button" class="date-mode" data-period-mode="range">Intervalo</button>
+      </section>
+      <section class="occurrence-counters" id="occurrenceCounters" aria-label="Resumo de ocorrências">
+        <button type="button" class="occurrence-counter total" data-occurrence-filter="all"><span>Total de ocorrências</span><strong id="occurrenceTotal">0</strong></button>
+        <button type="button" class="occurrence-counter pending" data-occurrence-filter="pending"><span>Ocorrências pendentes</span><strong id="occurrencePending">0</strong></button>
+        <button type="button" class="occurrence-counter ok-count" data-occurrence-filter="approved"><span>Ocorrências OK</span><strong id="occurrenceApproved">0</strong></button>
+      </section>
+      <section class="metrics" id="metrics"></section>
+      <section class="charts" id="charts"></section>
+      <div class="section-title">
+        <h2>Analistas com Hub na escala</h2>
+        <span class="subtitle"><span id="subtitle"></span> · <span id="generated"></span></span>
+      </div>
+      <section class="grid analysts" id="analysts"></section>
+    </section>
+    <section class="portal-view" id="dashboardsView">
+      <div class="page-heading mgr-head">
+        <div><h2>Dashboard Gerencial</h2><p class="subtitle" id="mgrSubtitle">Resumo do período com os filtros da aba Operação.</p></div>
+        <div class="mgr-actions">
+          <section class="date-modes" aria-label="Período do dashboard">
+            <button type="button" class="date-mode active" data-period-mode="day">Dia</button>
+            <button type="button" class="date-mode" data-period-mode="week">Semana</button>
+            <button type="button" class="date-mode" data-period-mode="month">Mês</button>
+            <button type="button" class="date-mode" data-period-mode="range">Intervalo</button>
+          </section>
+          <button type="button" class="ghost-button" id="mgrPdf" title="Abre a impressão do Chrome: escolha Salvar como PDF">Exportar PDF</button>
+        </div>
+      </div>
+      <div class="mgr-dashboard" id="mgrDashboard"></div>
+      <h3 class="mgr-title">Atalhos</h3>
+      <div class="dashboard-grid" id="dashboardLinks"></div>
+      <div class="dashboard-frame-wrap" id="dashboardFrameWrap" hidden><div class="frame-toolbar"><strong id="dashboardFrameTitle"></strong><a class="link-button" id="dashboardExternal" target="_blank" rel="noopener">Abrir em nova aba</a></div><iframe id="dashboardFrame" title="Dashboard gerencial"></iframe></div>
+    </section>
+    <!-- 08/10/2026: projeto Visibilidade Schedule (planilha Gestão T3), montado pelo supervisor.js numa caixa isolada. -->
+    <section class="portal-view" id="visibilidadeView" aria-label="Visibilidade Schedule"></section>
+    <!-- 08/10/2026: Gerenciamento (ESBOÇO), montado pelo supervisor.js (mgmtStart). -->
+    <section class="portal-view" id="gerenciamentoView" aria-label="Gerenciamento"></section>
+    <!-- 09/10/2026: Tickets da Frota (migration 070), montado pelo supervisor.js (tkStart). A aba só aparece com a 070 no Supabase. -->
+    <section class="portal-view" id="ticketsView" aria-label="Tickets"></section>
+  </main>
+  <dialog id="details"><div class="modal" id="detailsBody"></div></dialog>
+  <dialog id="unassigned"><div class="modal" id="unassignedBody"></div></dialog>
+  <dialog id="occurrencesDialog"><div class="modal" id="occurrencesBody"></div></dialog>
+  <dialog id="eventsDialog"><div class="modal" id="eventsBody"></div></dialog>
+  <dialog id="substDialog"><div class="modal" id="substBody"></div></dialog>
+  <dialog id="emergencyDialog"><div class="modal" id="emergencyBody"></div></dialog>
+  <dialog id="linksDialog"><div class="modal" id="linksBody"></div></dialog>
+  <dialog id="glossaryDialog"><div class="modal" id="glossaryBody"></div></dialog>
+  <dialog id="ganttDialog" class="gantt-screen"><div class="modal" id="ganttBody"></div></dialog>
+  <div class="fab-menu" id="fabMenu">
+    <button type="button" class="fab-action" id="fabPdf">Exportar esta visão em PDF</button>
+    <button type="button" class="fab-action" id="fabToday">Voltar para hoje</button>
+    <button type="button" class="fab-action" id="fabRefresh">Atualizar dados</button>
+  </div>
+  <button type="button" class="fab" id="fab" aria-label="Ações rápidas" title="Ações rápidas"><span class="fab-mark"></span></button>
+  
+  
+
+<script src="../assets/panel-demo.js" defer></script></body>
+</html>
