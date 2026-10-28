@@ -1924,21 +1924,36 @@ function renderOperationView() {
 }
 
 function updateWelcome(dayAnalysts = []) {
-  const title = document.getElementById("welcomeTitle");
-  const text = document.getElementById("welcomeText");
-  if (!title || !text) return;
-  const firstName = String(payload?.access?.name || "").trim().split(/\s+/)[0] || "Supervisor";
+  const box = document.getElementById("operationBrief");
+  if (!box || !payload) return;
+  const firstName = String(payload.access?.name || "Supervisor").trim().split(/\s+/)[0];
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Bom dia" : hour < 18 ? "Boa tarde" : "Boa noite";
-  const attention = dayAnalysts.filter((analyst) => analyst.signal === "red" || (analyst.not_started || 0) > 0).length;
-  const executing = dayAnalysts.reduce((sum, analyst) => sum + (analyst.execution || 0), 0);
-  title.textContent = `${greeting}, ${firstName}!`;
-  text.textContent = attention
-    ? `Há ${attention} analista(s) precisando de atenção. Vamos organizar as prioridades juntos.`
-    : executing
-      ? `${executing} operação(ões) em execução. O painel está acompanhando tudo com você.`
-      : "Sua operação está tranquila neste momento. Eu aviso quando algo precisar da sua atenção.";
+  const metrics = calcMetrics(dayAnalysts);
+  const ids = new Set(dayAnalysts.map(a => Number(a.id)));
+  const open = occurrenceGroups().open.filter(item => ids.has(Number(item.analyst_id)));
+  const uncovered = (payload.unassigned_hubs || []).filter(h => (!h.work_date || inPeriod(dateOnly(h.work_date))) && (!filterRegion.size || filterRegion.has(h.region || stationRegionMap().get(String(h.station_id)) || "Sem regional")));
+  const parts = [], actions = [];
+  if (metrics.late) parts.push(`${metrics.late} operação(ões) passaram do horário previsto sem conclusão`);
+  if (metrics.not_started) parts.push(`${metrics.not_started} operação(ões) aguardam registro de início`);
+  if (open.length) { parts.push(`${open.length} ocorrência(s) precisam de acompanhamento`); actions.push(["Ver ocorrências", () => openOccurrences("open")]); }
+  if (uncovered.length) { parts.push(`${uncovered.length} ciclo(s) estão sem analista`); actions.push(["Ver hubs sem analista", openUnassigned]); }
+  if (metrics.cancelled_route) parts.push(`${metrics.cancelled_route} operação(ões) têm rota cancelada`);
+  const hasAttention = parts.length > 0;
+  document.getElementById("welcomeTitle").textContent = `${greeting}, ${firstName}! ${hasAttention ? "Vamos aos pontos de atenção." : metrics.assignments ? "Tudo em ordem por aqui." : "Vamos conferir este período."}`;
+  document.getElementById("welcomeText").textContent = hasAttention
+    ? `No período selecionado, ${parts.join("; ")}. Confira os registros para definir o próximo passo.`
+    : metrics.assignments
+      ? `Não identifiquei atrasos, inícios pendentes, ocorrências abertas ou ciclos descobertos neste recorte. São ${metrics.execution || 0} operação(ões) em execução e ${metrics.finished || 0} concluída(s).`
+      : "Não encontrei operações nos filtros atuais. Confira o período e os filtros antes de concluir que está tudo certo.";
+  box.dataset.tone = hasAttention ? "attention" : metrics.assignments ? "ok" : "neutral";
+  box.querySelector('.brief-icon').textContent = hasAttention ? '!' : metrics.assignments ? '✓' : 'i';
+  if (metrics.late || metrics.not_started || metrics.cancelled_route) actions.unshift(["Conferir analistas", () => document.getElementById("analysts").scrollIntoView({behavior:"smooth",block:"start"})]);
+  const area = document.getElementById("welcomeActions"); area.replaceChildren();
+  for (const [label, handler] of actions) { const button = document.createElement("button"); button.type="button";button.textContent=label;button.onclick=handler;area.append(button); }
+  document.getElementById("welcomeScope").textContent = `Período: ${periodLabel()} · Dados disponíveis no painel · Atualizado às ${new Date(payload.generated_at || Date.now()).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}`;
 }
+
 
 
 function occurrenceDay(item) {

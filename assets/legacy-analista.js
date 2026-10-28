@@ -1175,6 +1175,32 @@ qsa('.week-switch-btn').forEach((btn) => {
   };
 });
 
+function renderPersonalBrief(items) {
+  const hero = qs('.portal-hero');
+  if (!hero || !state) return;
+  const now = new Date(), name = String(state.analyst.name || 'Analista').split(' ')[0];
+  const late = items.filter(x => !isTerminalOperationStatus(x.operation_status) && x.end_datetime && new Date(x.end_datetime) < now);
+  const notStarted = items.filter(x => safeOperationStatus(x.operation_status) === 'pending' && new Date(x.start_datetime) <= now && new Date(x.end_datetime) >= now);
+  const executing = items.filter(x => safeOperationStatus(x.operation_status) === 'execution').length;
+  const extras = (state.overtime || []).filter(x => x.status === 'awaiting_analyst');
+  const rests = (state.absences || []).filter(x => canDecideTimeoff(x) && !x.analyst_decision && new Date(x.end_datetime) >= now);
+  const notices = (state.notifications || []).filter(x => x.status !== 'read');
+  const occurrences = (state.occurrences || []).filter(x => ['open','pending','awaiting_supervisor'].includes(x.status));
+  const parts = [], actions = [];
+  if (late.length) parts.push(`${late.length} operação(ões) passaram do horário previsto sem conclusão`);
+  if (notStarted.length) parts.push(`${notStarted.length} operação(ões) precisam do seu registro de início`);
+  if (late.length || notStarted.length) actions.push(['Conferir meus hubs', 'hubs']);
+  if (occurrences.length) parts.push(`${occurrences.length} ocorrência(s) estão em acompanhamento`);
+  if (extras.length) {parts.push(`${extras.length} convite(s) de hora extra aguardam sua resposta`);actions.push(['Responder horas extras','overtime']);}
+  if (rests.length) {parts.push(`${rests.length} DSR(s) aguardam sua decisão`);actions.push(['Conferir folgas','timeoff']);}
+  if (notices.length) parts.push(`${notices.length} aviso(s) ainda não foram lidos`);
+  hero.classList.add('personal-brief');hero.dataset.tone=parts.length?'attention':items.length?'ok':'neutral';
+  hero.querySelector('h2').textContent = `${name}, ${parts.length ? 'vamos conferir sua rotina?' : items.length ? 'tudo em ordem por aqui.' : 'vamos conferir sua escala.'}`;
+  qs('#smart-message').textContent = parts.length ? `Nesta semana, ${parts.join('; ')}. Confira abaixo os próximos passos.` : items.length ? `Não identifiquei pendências nos registros disponíveis. Você tem ${executing} operação(ões) em execução; as próximas atividades continuam abaixo.` : 'Não encontrei operações publicadas nesta semana. Confira sua escala antes de iniciar a jornada.';
+  let area=hero.querySelector('.brief-actions');if(!area){area=document.createElement('div');area.className='brief-actions';qs('#smart-message').after(area);}area.replaceChildren();
+  for(const [label,view] of actions){const button=document.createElement('button');button.type='button';button.textContent=label;button.onclick=()=>goToPortalView(view);area.append(button);}
+}
+
 function render() {
   updateScheduleTypeTabs();
   updateWeekSwitch();
@@ -1235,17 +1261,7 @@ function render() {
   qs('#timeoff-period').textContent = `Até ${fmtDate(timeoffWindowEnd())}`;
 
 
-  const pendingOperations = combinedAssignments.filter((item) => safeOperationStatus(item.operation_status) === 'pending').length;
-  const openNotices = state.notifications.filter((item) => item.status !== 'read').length;
-  qs('#smart-message').textContent = pendingOperations
-    ? `${a.name.split(' ')[0]}, você tem ${pendingOperations} operação(ões) pendente(s). Abra uma delas para registrar o Romaneio ou comunicar uma ocorrência.`
-    : openNotices
-      ? `${a.name.split(' ')[0]}, suas operações estão em ordem. Há ${openNotices} aviso(s) recente(s) para consultar.`
-      : `${a.name.split(' ')[0]}, sua rotina está organizada e sem pendências neste momento.`;
-
-
-
-
+  renderPersonalBrief(weekAssignments);
 
   const p = todayScheduleSource().publication;
   qs('#version-badge').textContent = p ? `Versão ${p.version}` : 'Sem publicação';

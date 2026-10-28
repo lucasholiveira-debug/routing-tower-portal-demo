@@ -14,3 +14,19 @@
 @media(max-width:500px){.welcome-page .hero-layout{padding-top:12px;gap:20px}.welcome-page h1{font-size:38px;margin:18px 0 15px}.welcome-page .intro{font-size:12px}.welcome-page .scene{height:230px;margin-top:5px}.welcome-page .brand-float{top:40px;width:118px;height:118px}.welcome-page .brand-face svg{width:90px;height:90px}.welcome-page .label-plan{top:30px}.welcome-page .label-team{top:161px}.welcome-page .ground-shadow{top:183px}.welcome-page .orbit{top:120px}.welcome-page .coordinate{display:none}.welcome-page .access-heading h2{font-size:28px}.welcome-page footer>span:last-child{display:none}}
 
 .welcome-page .label-team{right:2%}
+/* Routing Tower: blue controls and navy hierarchy, orange reserved for the mark. */
+:root{--blue:#365f90;--blue-hover:#294d79;--blue-soft:#edf3fb;--ink:#17243b;--muted:#65758b}
+.welcome-page{background:linear-gradient(125deg,#f5f8fc 0%,#f9fbfe 50%,#eef3fa 100%)}
+.welcome-page h1 em{background:linear-gradient(105deg,#294d79,#365f90 65%,#6488b3);background-clip:text;color:transparent}
+.welcome-page .eyebrow,.welcome-page .welcome-kicker{color:var(--blue)}
+.welcome-page .eyebrow>span{background:var(--blue);box-shadow:0 0 0 4px #365f9010}
+.welcome-page .access-card{border-color:#d2deed;box-shadow:0 22px 65px #294d7912,0 3px 12px #294d7907;border-top:3px solid var(--blue)}
+.welcome-page .access-tabs button[aria-selected=true]{color:var(--blue);border-color:var(--blue);background:var(--blue-soft)}
+.welcome-page .enter-button{background:var(--blue);color:#fff;box-shadow:0 5px 16px #365f9026}
+.welcome-page .enter-button:hover:not(:disabled){background:var(--blue-hover);box-shadow:0 8px 22px #365f9030}
+.welcome-page .enter-button:disabled{background:#365f90;opacity:.5}
+.welcome-page .preview-notice{background:#edf3fb;border-color:#d9e4f2}.welcome-page .preview-notice button{color:#294d79}
+.welcome-page .input-shell,.welcome-page .select-shell{border-color:#cedaeb;background:#f8fafd}
+.welcome-page .input-shell:focus-within,.welcome-page .select-shell:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px #365f9015}
+.welcome-page .welcome-environment{color:var(--blue)}.welcome-page .ambient-blue{background:radial-gradient(circle,#c6d8f0,transparent 67%);opacity:.7}
+.welcome-page .orbit{border-color:#365f902b}.welcome-page .chip-icon{color:var(--blue);background:#edf3fb}.welcome-page .profile-preview>span{color:var(--blue);background:#e2ecf9}
