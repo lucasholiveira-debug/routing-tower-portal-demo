@@ -16,7 +16,7 @@
  const buttons=[...nav.querySelectorAll('button')];
  for(const b of buttons){const key=b.dataset.personalView||b.dataset.view||(b.dataset.teamOperation?'operationView':'home');const label=b.querySelector('.nav-label')?.textContent||b.textContent.trim();b.innerHTML=icon(key)+'<span class="nav-label">'+label+'</span>';b.setAttribute('aria-label',label);b.title=label;}
  const brand=side.querySelector(team?'.portal-brand':'.brand');
- if(senior&&team)brand.querySelector('small').textContent='Portal do analista sênior';
+ if(senior&&team)brand.querySelector('small').textContent='Portal do analista de apoio';
  const controls=document.createElement('div');controls.className='navigation-controls';
  const collapse=document.createElement('button');collapse.type='button';collapse.className='navigation-collapse';collapse.innerHTML=icon('collapse');collapse.setAttribute('aria-controls','panelNavigation');controls.append(collapse);brand.after(controls);
  let mobileButton=document.querySelector('.portal-menu-toggle');
