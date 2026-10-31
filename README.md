@@ -8,16 +8,16 @@ Abra a página inicial, use o cartão de acesso na própria página, selecione *
 
 A aba **Login** apresenta a interface de acesso futuro; seus campos ficam desativados até a integração do backend. Não existe autenticação real nesta demonstração.
 
-- Supervisor: operação, dashboard, visibilidade, gerenciamento e janelas de ações.
+- Supervisor: operação, visibilidade, gerenciamento e janelas de ações.
 - Analista: escala individual, hubs, folgas, horas extras e links.
-- Analista sênior: sua operação e painel da equipe no mesmo ambiente; equipe em consulta.
+- Analista de apoio: sua operação e painel da equipe no mesmo ambiente; equipe em consulta.
 - Coordenador e gerente: visão de equipes em consulta.
 
 As ações indicadas como simulação ficam apenas nesta aba do navegador. Não gravam no app nem no Supabase. Seleção de perfis é navegação de demonstração, não controle de acesso.
 
 ## Publicação
 
-GitHub Pages, branch `main`, pasta raiz. Os caminhos relativos permitem hospedar em um projeto do Pages.
+Migracao para Cloudflare Pages preparada com integracao GitHub, branch `main`, build `node tools/build-pages.mjs` e pasta publicada `dist`. Veja [CLOUDFLARE-PAGES.md](CLOUDFLARE-PAGES.md). O GitHub Pages permanece disponivel ate a validacao do novo endereco.
 
 ## Próxima fase
 
